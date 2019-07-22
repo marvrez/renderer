@@ -1,3 +1,6 @@
+#ifndef PHYSICS_UTILS_H
+#define PHYSICS_UTILS_H
+
 #include "math_utils.h"
 
 #include <SDL/SDL2.h>
@@ -12,11 +15,13 @@ typedef struct {
 } wall;
 
 typedef struct {
-    vec2 start, end;
+    line l;
     SDL_Color color;
 } wall_line;
 
 // Physics functions
-int line_side(vec2 point, vec2 start, vec2 end);
-int player_in_bounds(vec2 wall_start, vec2 end);
-int is_player_colliding_with_wall();
+int point_in_line(vec2 p, line l);
+int player_in_bounds(player p, wall_line l);
+int is_player_colliding_with_wall(player p, int num_walls, wall* walls);
+
+#endif
