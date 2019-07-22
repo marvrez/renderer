@@ -16,11 +16,11 @@ typedef struct {
 // generic math functions
 float dot(vec2 u, vec2 v);
 vec3 cross(vec3 u, vec3 v); 
-vec2 intersect(float x1, float y1, float x2, float y2,
-               float x3, float y3, float x4, float y4);
-vec2 intersect_line_segments(float x1, float y1, float x2, float y2, 
-                             float x3, float y3, float x4, float y4);
-float determinant(float x1, float y1, float x2, float y2);
+vec2 intersect(vec2 u_start, vec2 u_end,
+               vec2 v_start, vec2 v_end);
+vec2 intersect_line_segments(vec2 u_start, vec2 u_end,
+                             vec2 v_start, vec2 v_end);
+float determinant(vec2 u, vec2 v);
 vec3 normalize(vec3 v);
 int is_zero_vec(vec2 v);
 
