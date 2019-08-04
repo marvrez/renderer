@@ -25,10 +25,8 @@ line make_line(vec2 start, vec2 end);
 
 // generic math functions
 float dot(vec2 u, vec2 v);
-vec3 cross(vec3 u, vec3 v); 
+vec3 cross(vec3 u, vec3 v);
 vec2 intersect(line a, line b);
-vec2 intersect_line_segments(line a, line b);
-float determinant(vec2 u, vec2 v);
 vec3 normalize(vec3 v);
 int is_zero_vec(vec2 v);
 
