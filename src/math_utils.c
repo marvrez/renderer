@@ -62,3 +62,10 @@ int is_zero_vec(vec2 v)
 {
     return v.x <= M_EPS && v.y <= M_EPS;
 }
+
+vec2 interpolate(float t, vec2 a, vec2 b)
+{
+    t = CLAMP(t, 0.f, 1.f);
+    vec2 out = { a.x + t*(b.x - a.x), a.y + t*(b.y-a.y) };
+    return out;
+}

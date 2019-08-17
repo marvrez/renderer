@@ -3,7 +3,7 @@
 
 #include "math_utils.h"
 
-#include <SDL/SDL2.h>
+#include <SDL2/SDL.h>
 
 typedef struct {
     vec2 pos;
@@ -21,7 +21,6 @@ typedef struct {
 
 // Physics functions
 int point_in_line(vec2 p, line l);
-int player_in_bounds(player p, wall_line l);
-int is_player_colliding_with_wall(player p, int num_walls, wall* walls);
+int is_player_colliding_with_wall(player p, int num_wall_lines, wall_line* wall_lines);
 
 #endif

@@ -1,7 +1,7 @@
 OPENMP ?= 0
 DEBUG  ?= 0
 
-OBJ= main.o math_utils.o
+OBJ= main.o math_utils.o physics_utils.o render_utils.o
 EXECOBJA= 
 
 VPATH=./src/
@@ -15,8 +15,8 @@ COMMON= -Iinclude/ -Isrc/
 CFLAGS=-Wall -Wno-unknown-pragmas -Wfatal-errors -fPIC
 
 # SDL2
-LDFLAGS+= `pkg-config --libs sdl2`
-COMMON+= `pkg-config --cflags sdl2`
+LDFLAGS+=`pkg-config --libs sdl2`
+CFLAGS+=`pkg-config --cflags sdl2`
 
 ifeq ($(OPENMP), 1)
 CFLAGS+= -fopenmp

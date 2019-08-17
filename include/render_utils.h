@@ -1,9 +1,10 @@
-#ifndef DRAWING_UTILS_H
-#define DRAWING_UTILS_H
+#ifndef RENDER_UTILS_H
+#define RENDER_UTILS_H
 
-#include <SDL/SDL2.h>
+#include <SDL2/SDL.h>
 
 #include "math_utils.h"
+#include "physics_utils.h"
 
 void render_wall(wall_line l);
 
