@@ -15,8 +15,8 @@ COMMON= -Iinclude/ -Isrc/
 CFLAGS=-Wall -Wno-unknown-pragmas -Wfatal-errors -fPIC
 
 # SDL2
-LDFLAGS+=`pkg-config --libs sdl2`
-CFLAGS+=`pkg-config --cflags sdl2`
+LDFLAGS+=`pkg-config --libs sdl2 SDL2_ttf`
+CFLAGS+=`pkg-config --cflags sdl2 SDL2_ttf`
 
 ifeq ($(OPENMP), 1)
 CFLAGS+= -fopenmp

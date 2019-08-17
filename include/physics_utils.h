@@ -7,6 +7,8 @@
 
 typedef struct {
     vec2 pos;
+    float height;
+    float angle;
 } player;
 
 typedef struct {
