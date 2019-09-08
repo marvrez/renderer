@@ -108,19 +108,22 @@ void draw_debug_wall(program_state* state, wall_line wl)
 
     // used for drawing the current line
     line absolute_line = wl.l;
-    line player_line = { p.pos, { p.pos.x + 5*cosf(p.angle), p.pos.y - 5*sinf(p.angle)} };
+
+    float pcos = cosf(p.angle), psin = sinf(p.angle);
+
+    line player_line = { p.pos, { p.pos.x + 5*pcos, p.pos.y - 5*psin} };
 
     // set line to be relative to the player
     vec3 transformed_line_start = { absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y };
     vec3 transformed_line_end = { absolute_line.end.x - p.pos.x, p.pos.y - absolute_line.end.y };
 
     // calculate depth of vertices based on player rotation
-    transformed_line_start.z = transformed_line_start.x*cosf(p.angle) + transformed_line_start.y*sinf(p.angle);
-    transformed_line_end.z = transformed_line_end.x*cosf(p.angle) + transformed_line_end.y*sinf(p.angle);
+    transformed_line_start.z = transformed_line_start.x*pcos + transformed_line_start.y*psin;
+    transformed_line_end.z = transformed_line_end.x*pcos + transformed_line_end.y*psin;
 
-    // calculate x position of vertices based on player rotation
-    transformed_line_start.x = transformed_line_start.y*cosf(p.angle) - transformed_line_start.x*sinf(p.angle);
-    transformed_line_end.x = transformed_line_end.y*cosf(p.angle) - transformed_line_end.x*sin(p.angle);
+    // calculate x position of vertices by rotating the point by (90-player.angle) degrees counterclockwise
+    transformed_line_start.x = transformed_line_start.y*pcos - transformed_line_start.x*psin;
+    transformed_line_end.x = transformed_line_end.y*pcos - transformed_line_end.x*psin;
 
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
