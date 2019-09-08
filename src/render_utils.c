@@ -64,12 +64,12 @@ program_state setup_renderer()
 
 void draw_floor(SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, FLOOR_COLOR.r, FLOOR_COLOR.g, FLOOR_COLOR.b, 255);
+    SDL_SetRenderDrawColor(renderer, FLOOR_COLOR.r, FLOOR_COLOR.g, FLOOR_COLOR.b, FLOOR_COLOR.a);
     SDL_Rect floor_rect = { 0, HALF_WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT };
     SDL_RenderFillRect(renderer, &floor_rect);
 }
 
-void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* font)
+void draw_debug_text(program_state state)
 {
     static char message[1024];
     // Draw info text
@@ -79,25 +79,25 @@ void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* fon
         "player position: (%.2f, %.2f) \n"
         "angle is %.2f degrees. \n\n"
         "Move with arrow keys / WASD, r to reset position, e to turn 1 degree, t to turn 45 degrees, left ctrl to crouch\nPress q to quit.",
-        state->fps,
-        state->p.pos.x, state->p.pos.y,
-        fmod(state->p.angle, 2*M_PI) * 180 / M_PI
+        state.fps,
+        state.p.pos.x, state.p.pos.y,
+        fmod(state.p.angle, 2*M_PI) * 180 / M_PI
     );
 
     // Create surfaces, texture & rect needed for text rendering
     SDL_Color red = { 255, 0, 0, 255 };
-    SDL_Surface* info_text_surface = TTF_RenderText_Blended_Wrapped(font, message, red, WINDOW_WIDTH - 15);
-    SDL_Texture* info_texture = SDL_CreateTextureFromSurface(state->renderer, info_text_surface);
+    SDL_Surface* info_text_surface = TTF_RenderText_Blended_Wrapped(state.font, message, red, WINDOW_WIDTH - 15);
+    SDL_Texture* info_texture = SDL_CreateTextureFromSurface(state.renderer, info_text_surface);
 
     SDL_Rect text_render_quad = { 15, VIEW_HEIGHT + 30, info_text_surface->w, info_text_surface->h };
-    SDL_RenderCopy(state->renderer, info_texture, NULL, &text_render_quad);
+    SDL_RenderCopy(state.renderer, info_texture, NULL, &text_render_quad);
 
     // destroy data used to draw text
     SDL_FreeSurface(info_text_surface);
     SDL_DestroyTexture(info_texture);
 }
 
-void draw_views(SDL_Renderer* renderer, SDL_Point* offset)
+void draw_views(SDL_Renderer* renderer)
 {
     // draw absolute viewport
     // set color to black & draw viewport background
@@ -115,13 +115,12 @@ void draw_views(SDL_Renderer* renderer, SDL_Point* offset)
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &TRANSFORMED_VIEW);
 
-    offset->x = TRANSFORMED_VIEW.x;
-    offset->y = TRANSFORMED_VIEW.y;
+    SDL_Point offset = { TRANSFORMED_VIEW.x, TRANSFORMED_VIEW.y };
 
     // draw player line
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     line l = { { HALF_VIEW_WIDTH, HALF_VIEW_HEIGHT }, { HALF_VIEW_WIDTH, HALF_VIEW_WIDTH - 5 } };
-    draw_line_with_offset(renderer, l, *offset);
+    draw_line_with_offset(renderer, l, offset);
 }
 
 void draw_line_with_offset(SDL_Renderer* renderer, line l, SDL_Point offset)

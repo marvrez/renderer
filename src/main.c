@@ -12,32 +12,41 @@ void render_wall(program_state* state, wall_line wl)
 
 }
 
-void render_walls(program_state* state)
+void render_debug_wall(program_state* state, wall_line wl)
 {
-    for(int i = 0; i < NUM_WALLS; ++i) {
-        render_wall(state, WALL_LINES[i]);
-    }
+
 }
 
-void spin_renderer_once(program_state* state)
+void handle_input(program_state* state)
 {
 
-    SDL_SetRenderDrawColor(state->renderer, CEILING_COLOR.r, CEILING_COLOR.g, CEILING_COLOR.b, 255);
-    SDL_RenderClear(state->renderer);
-
-    draw_floor(state->renderer);
-    render_walls(state);
-
-    SDL_RenderPresent(state->renderer);
 }
 
 int main(int argc, char** argv)
 {
     program_state state = setup_renderer();
-
     while(state.running) {
-        spin_renderer_once(&state);
-    }
+        handle_input(&state);
 
+        // set ceiling color
+        SDL_SetRenderDrawColor(state.renderer, CEILING_COLOR.r, CEILING_COLOR.g, CEILING_COLOR.b, CEILING_COLOR.a);
+        SDL_RenderClear(state.renderer);
+
+        draw_floor(state.renderer);
+
+        // render all walls on the whole screen
+        for(int i = 0; i < NUM_WALLS; ++i) {
+            render_wall(&state, WALL_LINES[i]);
+        }
+
+        // render debug viewports
+        draw_views(state.renderer);
+        draw_debug_text(state);
+        for(int i = 0; i < NUM_WALLS; ++i) {
+            render_debug_wall(&state, WALL_LINES[i]);
+        }
+
+        SDL_RenderPresent(state.renderer);
+    }
     return 0;
 }
