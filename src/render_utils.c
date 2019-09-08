@@ -114,11 +114,11 @@ void draw_debug_wall(program_state* state, wall_line wl)
     vec3 transformed_line_start = { absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y };
     vec3 transformed_line_end = { absolute_line.end.x - p.pos.x, p.pos.y - absolute_line.end.y };
 
-    // calculate depth of vertices based on where the player is looking
+    // calculate depth of vertices based on player rotation
     transformed_line_start.z = transformed_line_start.x*cosf(p.angle) + transformed_line_start.y*sinf(p.angle);
     transformed_line_end.z = transformed_line_end.x*cosf(p.angle) + transformed_line_end.y*sinf(p.angle);
 
-    // calculate x position of verticies based on where the player is looking
+    // calculate x position of vertices based on player rotation
     transformed_line_start.x = transformed_line_start.y*cosf(p.angle) - transformed_line_start.x*sinf(p.angle);
     transformed_line_end.x = transformed_line_end.y*cosf(p.angle) - transformed_line_end.x*sin(p.angle);
 
