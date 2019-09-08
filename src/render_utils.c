@@ -79,10 +79,12 @@ void draw_debug_text(program_state state)
     sprintf(
         message,
         "fps: %.2f \n"
-        "player position: (%.2f, %.2f), angle: %.2f deg. \n\n"
+        "player position: (%.2f, %.2f)\n"
+        "angle: %.2f deg. \n\n"
         "Move with arrow keys / WASD, left ctrl to crouch\nPress esc or q to exit.",
         state.fps,
-        state.p.pos.x, state.p.pos.y, fmod(state.p.angle, 2*M_PI) * 180 / M_PI
+        state.p.pos.x, state.p.pos.y,
+        fmod(state.p.angle, 2*M_PI) * 180 / M_PI
     );
 
     // Create surfaces, texture & rect needed for text rendering
@@ -100,21 +102,19 @@ void draw_debug_text(program_state state)
 
 void draw_views(SDL_Renderer* renderer)
 {
-    // draw absolute viewport
-    // set color to black & draw viewport background
+    // set color to black & fill viewport background
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(renderer, &ABSOLUTE_VIEW);
     // set color to red and draw border.
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &ABSOLUTE_VIEW);
+    SDL_RenderDrawRect(renderer, &ABSOLUTE_VIEW);
 
-    // draw transformed viewport
-    // set color to black & draw viewport background
+    // set color to black & fill viewport background
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderFillRect(renderer, &TRANSFORMED_VIEW);
     // set color to red and draw border.
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &TRANSFORMED_VIEW);
+    SDL_RenderDrawRect(renderer, &TRANSFORMED_VIEW);
 
     SDL_Point offset = { TRANSFORMED_VIEW.x, TRANSFORMED_VIEW.y };
 
