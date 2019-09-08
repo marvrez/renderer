@@ -6,9 +6,7 @@
 
 program_state setup_renderer()
 {
-    program_state state;
-    state.running = 1;
-    state.fps = 0;
+    program_state state = {{{25.f, 25.f}, STANDING_HEIGHT, 0.f}, 1, 0.f};
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
     TTF_Init();
@@ -62,8 +60,13 @@ program_state setup_renderer()
     return state;
 }
 
-void draw_floor(SDL_Renderer* renderer)
+void draw_floor_and_ceiling(SDL_Renderer* renderer)
 {
+    // set ceiling color
+    SDL_SetRenderDrawColor(renderer, CEILING_COLOR.r, CEILING_COLOR.g, CEILING_COLOR.b, CEILING_COLOR.a);
+    SDL_RenderClear(renderer);
+
+    // set floor color
     SDL_SetRenderDrawColor(renderer, FLOOR_COLOR.r, FLOOR_COLOR.g, FLOOR_COLOR.b, FLOOR_COLOR.a);
     SDL_Rect floor_rect = { 0, HALF_WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT };
     SDL_RenderFillRect(renderer, &floor_rect);
@@ -75,13 +78,11 @@ void draw_debug_text(program_state state)
     // Draw info text
     sprintf(
         message,
-        "fps: %d \n"
-        "player position: (%.2f, %.2f) \n"
-        "angle is %.2f degrees. \n\n"
-        "Move with arrow keys / WASD, r to reset position, e to turn 1 degree, t to turn 45 degrees, left ctrl to crouch\nPress q to quit.",
+        "fps: %.2f \n"
+        "player position: (%.2f, %.2f), angle: %.2f deg. \n\n"
+        "Move with arrow keys / WASD, left ctrl to crouch\nPress esc or q to exit.",
         state.fps,
-        state.p.pos.x, state.p.pos.y,
-        fmod(state.p.angle, 2*M_PI) * 180 / M_PI
+        state.p.pos.x, state.p.pos.y, fmod(state.p.angle, 2*M_PI) * 180 / M_PI
     );
 
     // Create surfaces, texture & rect needed for text rendering
@@ -130,28 +131,5 @@ void draw_line_with_offset(SDL_Renderer* renderer, line l, SDL_Point offset)
        l.start.y + offset.y, 
        l.end.x + offset.x, 
        l.end.y + offset.y
-    );
-}
-
-void draw_line_with_scale_and_offset(SDL_Renderer* renderer, line l, float scale, SDL_Point offset)
-{
-    SDL_RenderDrawLine(renderer, 
-        (int)(scale * l.start.x) + offset.x,
-        (int)(scale * l.start.y) + offset.y, 
-        (int)(scale * l.end.x) + offset.x, 
-        (int)(scale * l.end.y) + offset.y
-    );
-}
-
-void draw_pixel_with_offset(SDL_Renderer* renderer, vec2 p, SDL_Point offset)
-{
-    SDL_RenderDrawPoint(renderer, p.x + offset.x, p.y + offset.y);
-}
-
-void draw_pixel_with_scale_and_offset(SDL_Renderer* renderer, vec2 p, float scale, SDL_Point offset)
-{
-    SDL_RenderDrawPoint(renderer, 
-        (int)(scale*p.x) + offset.x, 
-        (int)(scale*p.y) + offset.y
     );
 }

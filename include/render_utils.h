@@ -11,7 +11,7 @@ typedef struct {
     player p;
 
     int running;
-    int fps;
+    float fps;
 
     // SDL states
     SDL_Surface* surface;
@@ -25,16 +25,12 @@ typedef struct {
 
 program_state setup_renderer();
 
-void draw_floor(SDL_Renderer* renderer);
+void draw_floor_and_ceiling(SDL_Renderer* renderer);
 
 void draw_views(SDL_Renderer* renderer);
 void draw_debug_text(program_state state);
 
 // Offset functions make it easy to have multiple viewports
 void draw_line_with_offset(SDL_Renderer* renderer, line l, SDL_Point offset);
-void draw_line_with_scale_and_offset(SDL_Renderer* renderer, line l, float scale, SDL_Point offset);
-
-void draw_pixel_with_offset(SDL_Renderer* renderer, vec2 p, SDL_Point offset);
-void draw_pixel_with_scale_and_offset(SDL_Renderer* renderer, vec2 p, float scale, SDL_Point offset);
 
 #endif

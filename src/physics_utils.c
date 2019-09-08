@@ -1,4 +1,5 @@
 #include "physics_utils.h"
+#include "parameters.h"
 
 static inline int player_in_bounds(player p, wall_line wl)
 {
@@ -8,10 +9,10 @@ static inline int player_in_bounds(player p, wall_line wl)
     return det > 0.f;
 }
 
-int is_player_colliding_with_wall(player p, int num_wall_lines, wall_line* wall_lines)
+int is_player_colliding_with_wall(player p)
 {
-    for(int i = 0; i < num_wall_lines; ++i) {
-        wall_line wl = wall_lines[i];
+    for(int i = 0; i < NUM_WALLS; ++i) {
+        wall_line wl = WALL_LINES[i];
         if(!player_in_bounds(p, wl)) {
             return 1;
         }

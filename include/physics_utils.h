@@ -23,6 +23,6 @@ typedef struct {
 
 // Physics functions
 int point_in_line(vec2 p, line l);
-int is_player_colliding_with_wall(player p, int num_wall_lines, wall_line* wall_lines);
+int is_player_colliding_with_wall(player p);
 
 #endif
