@@ -4,6 +4,71 @@
 
 #include <string.h>
 
+program_state setup_renderer()
+{
+    program_state state;
+    state.running = 1;
+    state.fps = 0;
+
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+    TTF_Init();
+
+    SDL_Window* window = SDL_CreateWindow(
+        "meme renderer",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT,
+        0
+    );
+
+    if(!window) {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "failed to create a window: %s\n", SDL_GetError()
+        );
+        state.running = 0;
+    }
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(
+        window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+    if(!renderer) {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "failed to create a renderer: %s\n", SDL_GetError()
+        );
+        state.running = 0;
+    }
+
+    SDL_Surface* surface  = SDL_GetWindowSurface(window);
+
+    TTF_Font* font = TTF_OpenFont(FONT_PATH, 16);
+    if(!font) {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "failed to load font: %s\n", SDL_GetError()
+        );
+        state.running = 0;
+    }
+
+    state.surface = surface;
+    state.renderer = renderer;
+    state.window = window;
+    state.font = font;
+
+    return state;
+}
+
+void draw_floor(SDL_Renderer* renderer)
+{
+    SDL_SetRenderDrawColor(renderer, FLOOR_COLOR.r, FLOOR_COLOR.g, FLOOR_COLOR.b, 255);
+    SDL_Rect floor_rect = { 0, HALF_WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT };
+    SDL_RenderFillRect(renderer, &floor_rect);
+}
+
 void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* font)
 {
     static char message[1024];
@@ -13,7 +78,6 @@ void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* fon
         "fps: %d \n"
         "player position: (%.2f, %.2f) \n"
         "angle is %.2f degrees. \n\n"
-        "Touch & drag anywhere on canvas to move \n"
         "Move with arrow keys / WASD, r to reset position, e to turn 1 degree, t to turn 45 degrees, left ctrl to crouch\nPress q to quit.",
         state->fps,
         state->p.pos.x, state->p.pos.y,
@@ -31,8 +95,6 @@ void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* fon
     // destroy data used to draw text
     SDL_FreeSurface(info_text_surface);
     SDL_DestroyTexture(info_texture);
-
-    state->drawing_last_wall = 0;
 }
 
 void draw_views(SDL_Renderer* renderer, SDL_Point* offset)
@@ -60,16 +122,6 @@ void draw_views(SDL_Renderer* renderer, SDL_Point* offset)
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     line l = { { HALF_VIEW_WIDTH, HALF_VIEW_HEIGHT }, { HALF_VIEW_WIDTH, HALF_VIEW_WIDTH - 5 } };
     draw_line_with_offset(renderer, l, *offset);
-
-    // change render color to a light blue for viewplane trim
-    SDL_SetRenderDrawColor(renderer, 128, 128, 255, 128);
-
-    // Draw intersecting line
-    const float delta = 1e-4;
-    line l1 = { { HALF_VIEW_WIDTH - delta, HALF_VIEW_WIDTH - delta }, { HALF_VIEW_WIDTH - (HALF_VIEW_WIDTH / 2), 0 } };
-    line l2 = { { HALF_VIEW_WIDTH + delta, HALF_VIEW_WIDTH - delta }, { HALF_VIEW_WIDTH + (HALF_VIEW_WIDTH / 2), 0 } };
-    draw_line_with_offset(renderer, l1, *offset);
-    draw_line_with_offset(renderer, l2, *offset);
 }
 
 void draw_line_with_offset(SDL_Renderer* renderer, line l, SDL_Point offset)

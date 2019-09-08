@@ -9,10 +9,8 @@
 
 typedef struct {
     player p;
-    SDL_Point virtual_joystick_pos;
 
     int running;
-    int drawing_last_wall;
     int fps;
 
     // SDL states
@@ -20,10 +18,14 @@ typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
+    TTF_Font* font;
+
 } program_state;
 
-void render_wall(wall_line wl);
-void render_debug_wall(wall_line wl);
+
+program_state setup_renderer();
+
+void draw_floor(SDL_Renderer* renderer);
 
 void draw_views(SDL_Renderer* renderer, SDL_Point* offset);
 void draw_debug_text(program_state* state, SDL_Renderer* renderer, TTF_Font* font);
