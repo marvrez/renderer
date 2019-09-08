@@ -3,6 +3,7 @@
 #include "parameters.h"
 
 #include <string.h>
+#include <math.h>
 
 program_state setup_renderer()
 {
@@ -84,7 +85,7 @@ void draw_debug_text(program_state state)
         "Move with arrow keys / WASD, left ctrl to crouch\nPress esc or q to exit.",
         state.fps,
         state.p.pos.x, state.p.pos.y,
-        fmod(state.p.angle, 2*M_PI) * 180 / M_PI
+        fmodf(state.p.angle, 2*M_PI)*180/M_PI
     );
 
     // Create surfaces, texture & rect needed for text rendering
@@ -98,6 +99,48 @@ void draw_debug_text(program_state state)
     // destroy data used to draw text
     SDL_FreeSurface(info_text_surface);
     SDL_DestroyTexture(info_texture);
+}
+
+void draw_debug_wall(program_state* state, wall_line wl)
+{
+    SDL_Point offset;
+    player p = state->p;
+
+    // used for drawing the current line
+    line absolute_line = wl.l;
+    line player_line = { p.pos, { p.pos.x + 5*cosf(p.angle), p.pos.y - 5*sinf(p.angle)} };
+
+    // set line to be relative to the player
+    vec3 transformed_line_start = { absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y };
+    vec3 transformed_line_end = { absolute_line.end.x - p.pos.x, p.pos.y - absolute_line.end.y };
+
+    // calculate depth of vertices based on where the player is looking
+    transformed_line_start.z = transformed_line_start.x*cosf(p.angle) + transformed_line_start.y*sinf(p.angle);
+    transformed_line_end.z = transformed_line_end.x*cosf(p.angle) + transformed_line_end.y*sinf(p.angle);
+
+    // calculate x position of verticies based on where the player is looking
+    transformed_line_start.x = transformed_line_start.y*cosf(p.angle) - transformed_line_start.x*sinf(p.angle);
+    transformed_line_end.x = transformed_line_end.y*cosf(p.angle) - transformed_line_end.x*sin(p.angle);
+
+    /* ABSOLUTE VIEW */
+    offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
+    // draw wall lines with green in the absolute view
+    SDL_SetRenderDrawColor(state->renderer, 0, 255, 0, 255);
+    draw_line_with_offset(state->renderer, absolute_line, offset);
+
+    // draw absolute red player line
+    SDL_SetRenderDrawColor(state->renderer, 255, 0, 0, 255);
+    draw_line_with_offset(state->renderer, player_line, offset);
+
+    /* TRANSFORMED VIEW */
+    offset.x = TRANSFORMED_VIEW.x, offset.y = TRANSFORMED_VIEW.y;
+    // draw the wall lines with green in transformed view
+    SDL_SetRenderDrawColor(state->renderer, 0, 255, 0, 255);
+    line transformed_line = {
+        { HALF_VIEW_WIDTH - transformed_line_start.x, HALF_VIEW_WIDTH - transformed_line_start.z },
+        { HALF_VIEW_WIDTH - transformed_line_end.x, HALF_VIEW_WIDTH - transformed_line_end.z }
+    };
+    draw_line_with_offset(state->renderer, transformed_line, offset);
 }
 
 void draw_views(SDL_Renderer* renderer)
@@ -116,9 +159,8 @@ void draw_views(SDL_Renderer* renderer)
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &TRANSFORMED_VIEW);
 
+    // draw static red player line in transformed view
     SDL_Point offset = { TRANSFORMED_VIEW.x, TRANSFORMED_VIEW.y };
-
-    // draw player line
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     line l = { { HALF_VIEW_WIDTH, HALF_VIEW_HEIGHT }, { HALF_VIEW_WIDTH, HALF_VIEW_WIDTH - 5 } };
     draw_line_with_offset(renderer, l, offset);

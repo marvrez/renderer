@@ -22,12 +22,12 @@ typedef struct {
 
 } program_state;
 
-
 program_state setup_renderer();
 
 void draw_floor_and_ceiling(SDL_Renderer* renderer);
 
 void draw_views(SDL_Renderer* renderer);
+void draw_debug_wall(program_state* state, wall_line wl);
 void draw_debug_text(program_state state);
 
 // Offset functions make it easy to have multiple viewports
