@@ -1,6 +1,10 @@
 #ifndef MATH_UTILS_H
 #define MATH_UTILS_H
 
+#include <math.h>
+
+#define RAD2DEG(rads) (rads*180.f/M_PI)
+
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define CLAMP(val, min_val, max_val) MIN(MAX(val, min_val), max_val)

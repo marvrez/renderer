@@ -1,7 +1,5 @@
 #include "math_utils.h"
 
-#include <math.h>
-
 #define M_EPS 1e-6
 
 float dot(vec2 u, vec2 v)

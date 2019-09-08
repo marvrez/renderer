@@ -1,6 +1,7 @@
 #include "render_utils.h"
 
 #include "parameters.h"
+#include "math_utils.h"
 
 #include <string.h>
 #include <math.h>
@@ -85,7 +86,7 @@ void draw_debug_text(program_state state)
         "Move with arrow keys / WASD, left ctrl to crouch\nPress esc or q to exit.",
         state.fps,
         state.p.pos.x, state.p.pos.y,
-        fmodf(state.p.angle, 2*M_PI)*180/M_PI
+        RAD2DEG(fmodf(state.p.angle, 2*M_PI))
     );
 
     // Create surfaces, texture & rect needed for text rendering
