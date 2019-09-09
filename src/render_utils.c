@@ -128,8 +128,8 @@ void draw_debug_wall(program_state* state, wall_line wl)
 
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
-    // draw wall lines with green in the absolute view
-    SDL_SetRenderDrawColor(state->renderer, 0, 255, 0, 255);
+    // draw wall lines in the absolute view
+    SDL_SetRenderDrawColor(state->renderer, wl.color.r, wl.color.g, wl.color.b, wl.color.a);
     draw_line_with_offset(state->renderer, absolute_line, offset);
 
     // draw absolute red player line
@@ -138,8 +138,8 @@ void draw_debug_wall(program_state* state, wall_line wl)
 
     /* TRANSFORMED VIEW */
     offset.x = TRANSFORMED_VIEW.x, offset.y = TRANSFORMED_VIEW.y;
-    // draw the wall lines with green in transformed view
-    SDL_SetRenderDrawColor(state->renderer, 0, 255, 0, 255);
+    // draw the wall lines with transformed view
+    SDL_SetRenderDrawColor(state->renderer, wl.color.r, wl.color.g, wl.color.b, wl.color.a);
     line transformed_line = {
         { HALF_VIEW_WIDTH - transformed_line_start.x, HALF_VIEW_WIDTH - transformed_line_start.z },
         { HALF_VIEW_WIDTH - transformed_line_end.x, HALF_VIEW_WIDTH - transformed_line_end.z }
