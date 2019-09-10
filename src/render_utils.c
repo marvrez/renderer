@@ -115,15 +115,13 @@ void draw_debug_wall(program_state* state, wall_line wl)
     line player_line = { p.pos, { p.pos.x + 5*pcos, p.pos.y - 5*psin} };
 
     // transform line to be relative to the player
-    vec3 transformed_line_start = { absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y };
-    vec3 transformed_line_end = { absolute_line.end.x - p.pos.x, p.pos.y - absolute_line.end.y };
+    line relative_line = {{ absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y },
+                          { absolute_line.end.x - p.pos.x,   p.pos.y - absolute_line.end.y }};
 
     // rotate them to be around the player's view (90-player.angle) degrees
-    transformed_line_start.z = transformed_line_start.x*pcos + transformed_line_start.y*psin;
-    transformed_line_end.z = transformed_line_end.x*pcos + transformed_line_end.y*psin;
-    // multiplied by -1 because we want to view the inverse x-change in the transformed view
-    transformed_line_start.x = -(transformed_line_start.x*psin - transformed_line_start.y*pcos);
-    transformed_line_end.x = -(transformed_line_end.x*psin - transformed_line_end.y*pcos);
+    // multiply x coordinates by -1 because we want to view the inverse change of X in the transformed view
+    line transformed_line = {{ -(relative_line.start.x*psin - relative_line.start.y*pcos), relative_line.start.x*pcos + relative_line.start.y*psin },
+                             { -(relative_line.end.x*psin - relative_line.end.y*pcos),     relative_line.end.x*pcos + relative_line.end.y*psin }};
 
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
@@ -139,11 +137,11 @@ void draw_debug_wall(program_state* state, wall_line wl)
     offset.x = TRANSFORMED_VIEW.x, offset.y = TRANSFORMED_VIEW.y;
     // draw the wall lines with transformed view
     SDL_SetRenderDrawColor(state->renderer, wl.color.r, wl.color.g, wl.color.b, wl.color.a);
-    line transformed_line = {
-        { HALF_VIEW_WIDTH - transformed_line_start.x, HALF_VIEW_WIDTH - transformed_line_start.z },
-        { HALF_VIEW_WIDTH - transformed_line_end.x, HALF_VIEW_WIDTH - transformed_line_end.z }
+    line transformed_line_centered = {
+        { HALF_VIEW_WIDTH - transformed_line.start.x, HALF_VIEW_WIDTH - transformed_line.start.y },
+        { HALF_VIEW_WIDTH - transformed_line.end.x,   HALF_VIEW_WIDTH - transformed_line.end.y }
     };
-    draw_line_with_offset(state->renderer, transformed_line, offset);
+    draw_line_with_offset(state->renderer, transformed_line_centered, offset);
 }
 
 void draw_views(SDL_Renderer* renderer)
