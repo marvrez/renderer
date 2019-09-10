@@ -121,7 +121,7 @@ void draw_debug_wall(program_state* state, wall_line wl)
     // rotate them to be around the player's view (90-player.angle) degrees
     transformed_line_start.z = transformed_line_start.x*pcos + transformed_line_start.y*psin;
     transformed_line_end.z = transformed_line_end.x*pcos + transformed_line_end.y*psin;
-    // multiplied by -1 because we want the counterclockwise direction to be the positive direction
+    // multiplied by -1 because we want to view the inverse x-change in the transformed view
     transformed_line_start.x = (transformed_line_start.x*psin - transformed_line_start.y*pcos);
     transformed_line_end.x = (transformed_line_end.x*psin - transformed_line_end.y*pcos);
 
