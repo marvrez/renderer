@@ -122,8 +122,8 @@ void draw_debug_wall(program_state* state, wall_line wl)
     transformed_line_start.z = transformed_line_start.x*pcos + transformed_line_start.y*psin;
     transformed_line_end.z = transformed_line_end.x*pcos + transformed_line_end.y*psin;
     // multiplied by -1 because we want to view the inverse x-change in the transformed view
-    transformed_line_start.x = (transformed_line_start.x*psin - transformed_line_start.y*pcos);
-    transformed_line_end.x = (transformed_line_end.x*psin - transformed_line_end.y*pcos);
+    transformed_line_start.x = -(transformed_line_start.x*psin - transformed_line_start.y*pcos);
+    transformed_line_end.x = -(transformed_line_end.x*psin - transformed_line_end.y*pcos);
 
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
