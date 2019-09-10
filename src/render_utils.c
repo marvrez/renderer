@@ -114,17 +114,16 @@ void draw_debug_wall(program_state* state, wall_line wl)
 
     line player_line = { p.pos, { p.pos.x + 5*pcos, p.pos.y - 5*psin} };
 
-    // set line to be relative to the player
+    // transform line to be relative to the player
     vec3 transformed_line_start = { absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y };
     vec3 transformed_line_end = { absolute_line.end.x - p.pos.x, p.pos.y - absolute_line.end.y };
 
-    // calculate depth of vertices based on player rotation
+    // rotate them to be around the player's view (90-player.angle) degrees
     transformed_line_start.z = transformed_line_start.x*pcos + transformed_line_start.y*psin;
     transformed_line_end.z = transformed_line_end.x*pcos + transformed_line_end.y*psin;
-
-    // calculate x position of vertices by rotating the point by (90-player.angle) degrees counterclockwise
-    transformed_line_start.x = transformed_line_start.y*pcos - transformed_line_start.x*psin;
-    transformed_line_end.x = transformed_line_end.y*pcos - transformed_line_end.x*psin;
+    // multiplied by -1 because we want the counterclockwise direction to be the positive direction
+    transformed_line_start.x = (transformed_line_start.x*psin - transformed_line_start.y*pcos);
+    transformed_line_end.x = (transformed_line_end.x*psin - transformed_line_end.y*pcos);
 
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
@@ -166,7 +165,7 @@ void draw_views(SDL_Renderer* renderer)
     // draw static red player line in transformed view
     SDL_Point offset = { TRANSFORMED_VIEW.x, TRANSFORMED_VIEW.y };
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    line l = { { HALF_VIEW_WIDTH, HALF_VIEW_HEIGHT }, { HALF_VIEW_WIDTH, HALF_VIEW_WIDTH - 5 } };
+    line l = { { HALF_VIEW_WIDTH, HALF_VIEW_HEIGHT }, { HALF_VIEW_WIDTH, HALF_VIEW_WIDTH - 7 } };
     draw_line_with_offset(renderer, l, offset);
 }
 
