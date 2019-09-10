@@ -24,6 +24,7 @@ typedef struct {
 
 program_state setup_renderer();
 
+void draw_wall(program_state* state, wall_line wl);
 void draw_floor_and_ceiling(SDL_Renderer* renderer);
 
 void draw_views(SDL_Renderer* renderer);
