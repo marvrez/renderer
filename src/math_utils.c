@@ -23,17 +23,17 @@ static inline float determinant(float x1, float y1, float x2, float y2)
 
 vec2 intersect(line a, line b)
 {
-	float x = determinant(a.start.x, a.start.y, a.end.x, a.end.y);
-	float y = determinant(b.start.x, b.start.y, b.end.x, b.end.y);
+    float x = determinant(a.start.x, a.start.y, a.end.x, a.end.y);
+    float y = determinant(b.start.x, b.start.y, b.end.x, b.end.y);
 
-	float det = determinant(a.start.x - a.end.x, a.start.y - a.end.y,
+    float det = determinant(a.start.x - a.end.x, a.start.y - a.end.y,
                             b.start.x - b.end.x, b.start.y - b.end.y);
 
     vec2 out;
-	out.x = determinant(x, a.start.x - a.end.x, y, b.start.x - b.end.x) / det;
-	out.y = determinant(x, a.start.y - a.end.y, y, b.start.y - b.end.y) / det;
+    out.x = determinant(x, a.start.x - a.end.x, y, b.start.x - b.end.x) / det;
+    out.y = determinant(x, a.start.y - a.end.y, y, b.start.y - b.end.y) / det;
 
-	return out;
+    return out;
 }
 
 vec3 normalize(vec3 v)
