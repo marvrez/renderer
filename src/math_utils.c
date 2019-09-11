@@ -16,32 +16,24 @@ vec3 cross(vec3 u, vec3 v)
     return out;
 }
 
-static inline float determinant(float* u, float* v)
+static inline float determinant(float x1, float y1, float x2, float y2)
 {
-    return u[0]*v[1] - v[0]*u[1];
+    return x1*y2 - x2*y1;
 }
 
 vec2 intersect(line a, line b)
 {
-    vec2 out = { 0.f, 0.f };
+	float x = determinant(a.start.x, a.start.y, a.end.x, a.end.y);
+	float y = determinant(b.start.x, b.start.y, b.end.x, b.end.y);
 
+	float det = determinant(a.start.x - a.end.x, a.start.y - a.end.y,
+                            b.start.x - b.end.x, b.start.y - b.end.y);
 
-    float x_diffs[] = { a.start.x - a.end.x, b.start.x - b.end.x };
-    float y_diffs[] = { a.start.y - a.end.y, b.start.y - b.end.y };
+    vec2 out;
+	out.x = determinant(x, a.start.x - a.end.x, y, b.start.x - b.end.x) / det;
+	out.y = determinant(x, a.start.y - a.end.y, y, b.start.y - b.end.y) / det;
 
-    float denom = determinant(x_diffs, y_diffs);
-
-    if(denom <= M_EPS) return out;
-
-    float t = ((a.start.x - b.start.x)*(b.start.y - b.end.y) - (a.start.y - b.start.y)*(b.start.x - b.end.x)) / denom;
-    float u = -((a.start.x - a.end.x)*(a.start.y - b.start.y) - (a.start.y - a.end.y)*(a.start.x - b.start.x)) / denom;
-
-    if(t > 1.f || t < 0.f || u > 1.f || u < 0.f) return out;
-
-    out.x = a.start.x + t*(a.end.x - a.start.x);
-    out.y = a.start.y + t*(a.end.y - a.start.y);
-
-    return out;
+	return out;
 }
 
 vec3 normalize(vec3 v)

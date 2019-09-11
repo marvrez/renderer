@@ -69,13 +69,11 @@ void draw_wall(program_state* state, wall_line wl)
 
     // used for drawing the current line, start by assigning the line points of the current 'wall' to AbsoluteLine
     line absolute_line = wl.l;
-
-    float pcos = cosf(p.angle), psin = sinf(p.angle);
-
     // transform line to be relative to the player
     line relative_line = {{ absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y },
                           { absolute_line.end.x - p.pos.x,   p.pos.y - absolute_line.end.y }};
 
+    float pcos = cosf(p.angle), psin = sinf(p.angle);
     // rotate them to be around the player's view (90-player.angle) degrees
     // multiply x coordinates by -1 because we want to view the inverse change of X in the transformed view
     line transformed_line = {{ -(relative_line.start.x*psin - relative_line.start.y*pcos), relative_line.start.x*pcos + relative_line.start.y*psin },
@@ -90,9 +88,7 @@ void draw_wall(program_state* state, wall_line wl)
 
     line l1 = { {-0.0001, 0.0001}, {-60, 2} };
     line l2 = { {0.0001, 0.0001}, {60, 2} };
-    vec2 intersect1 = intersect(transformed_line, l1);
-    vec2 intersect2 = intersect(transformed_line, l2);
-
+    vec2 intersect1 = intersect(transformed_line, l1), intersect2 = intersect(transformed_line, l2);
     // If the line is partially behind the player (crosses the viewplane, clip it)
     // If intersect1 is behind the player
     if(*tz1 <= 0.0) {
@@ -122,11 +118,11 @@ void draw_wall(program_state* state, wall_line wl)
     line top_wall_line = { w.top_left, w.top_right };
     line bot_wall_line = { w.bottom_left, w.bottom_right };
 
-    line left_line = { {-HALF_WINDOW_WIDTH + 1, -HALF_WINDOW_HEIGHT}, {-HALF_WINDOW_WIDTH + 1, HALF_WINDOW_HEIGHT} };
-    line right_line = { {HALF_WINDOW_WIDTH - 2, -HALF_WINDOW_HEIGHT}, {HALF_WINDOW_WIDTH - 2, HALF_WINDOW_HEIGHT} };
+    line left_window_line = { {-HALF_WINDOW_WIDTH + 1, -HALF_WINDOW_HEIGHT}, {-HALF_WINDOW_WIDTH + 1, HALF_WINDOW_HEIGHT} };
+    line right_window_line = { {HALF_WINDOW_WIDTH - 2, -HALF_WINDOW_HEIGHT}, {HALF_WINDOW_WIDTH - 2, HALF_WINDOW_HEIGHT} };
 
     // clip if out of view on left side
-    vec2 clip_top = intersect(top_wall_line, left_line), clip_bot = intersect(bot_wall_line, left_line);
+    vec2 clip_top = intersect(top_wall_line, left_window_line), clip_bot = intersect(bot_wall_line, left_window_line);
     if(w.top_left.x <= -HALF_WINDOW_WIDTH + 1) {
         w.top_left = clip_top;
         w.bottom_left.x = clip_top.x, w.bottom_left.y = clip_bot.y;
@@ -136,7 +132,7 @@ void draw_wall(program_state* state, wall_line wl)
         w.bottom_right.x = clip_top.x, w.bottom_right.y = clip_bot.y;
     }
     // clip if out of view on right side
-    clip_top = intersect(top_wall_line, right_line), clip_bot = intersect(bot_wall_line, right_line);
+    clip_top = intersect(top_wall_line, right_window_line), clip_bot = intersect(bot_wall_line, right_window_line);
     if(w.top_left.x >= HALF_WINDOW_WIDTH - 1) {
         w.top_left = clip_top;
         w.bottom_left.x = clip_top.x, w.bottom_left.y = clip_bot.y;
