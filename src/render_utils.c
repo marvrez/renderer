@@ -86,8 +86,9 @@ void draw_wall(program_state* state, wall_line wl)
     // If either point of the wall line is behind the player, ignore the line
     if(*tz1 <= 0.0 && *tz2 <= 0.0) return;
 
-    line l1 = { {-0.0001, 0.0001}, {-60, 2} };
-    line l2 = { {0.0001, 0.0001}, {60, 2} };
+    // small epsilon to avoid dividing by zero in intersection calculations
+    line l1 = { {-EPS, EPS}, {-HALF_VIEW_WIDTH/2, EPS} };
+    line l2 = { {EPS, EPS}, {HALF_VIEW_WIDTH/2, EPS} };
     vec2 intersect1 = intersect(transformed_line, l1), intersect2 = intersect(transformed_line, l2);
     // If the line is partially behind the player (crosses the viewplane, clip it)
     // If intersect1 is behind the player

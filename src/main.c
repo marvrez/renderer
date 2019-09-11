@@ -21,8 +21,8 @@ static inline void handle_input(program_state* state)
 
     const uint8_t* key = SDL_GetKeyboardState(NULL);
 
-    if(key[SDL_SCANCODE_LEFT])  p->angle += 0.1f;
-    if(key[SDL_SCANCODE_RIGHT]) p->angle -= 0.1f;
+    if(key[SDL_SCANCODE_LEFT])  p->angle += ANGULAR_VELOCITY;
+    if(key[SDL_SCANCODE_RIGHT]) p->angle -= ANGULAR_VELOCITY;
     float pcos = cosf(p->angle), psin = sinf(p->angle);
     if(key[SDL_SCANCODE_UP] || key[SDL_SCANCODE_W]) {
         p->pos.x += pcos;

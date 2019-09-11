@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include "physics_utils.h"
 
+#define EPS 1e-4
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define HALF_WINDOW_WIDTH WINDOW_WIDTH / 2
@@ -14,6 +16,7 @@
 #define HALF_VIEW_WIDTH VIEW_WIDTH / 2
 #define HALF_VIEW_HEIGHT VIEW_HEIGHT / 2
 
+#define ANGULAR_VELOCITY 0.05f
 #define CROUCHING_HEIGHT 6.f*HALF_WINDOW_HEIGHT
 #define STANDING_HEIGHT 10.f*HALF_WINDOW_HEIGHT
 
