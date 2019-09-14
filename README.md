@@ -13,3 +13,5 @@ cd renderer
 make -j
 ./renderer
 ``` 
+
+![screenshot](img/peekgif.gif)
