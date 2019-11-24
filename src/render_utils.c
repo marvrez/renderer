@@ -70,14 +70,13 @@ void draw_wall(program_state* state, wall_line wl)
     // used for drawing the current line, start by assigning the line points of the current 'wall' to AbsoluteLine
     line absolute_line = wl.l;
     // transform line to be relative to the player
-    line relative_line = {{ absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y },
-                          { absolute_line.end.x - p.pos.x,   p.pos.y - absolute_line.end.y }};
+    line relative_line = {{ absolute_line.start.x - p.pos.x, absolute_line.start.y - p.pos.y },
+                          { absolute_line.end.x - p.pos.x,   absolute_line.end.y - p.pos.y }};
 
     float pcos = cosf(p.angle), psin = sinf(p.angle);
-    // rotate them to be around the player's view (90-player.angle) degrees
-    // multiply x coordinates by -1 because we want to view the inverse change of X in the transformed view
-    line transformed_line = {{ -(relative_line.start.x*psin - relative_line.start.y*pcos), relative_line.start.x*pcos + relative_line.start.y*psin },
-                             { -(relative_line.end.x*psin - relative_line.end.y*pcos),     relative_line.end.x*pcos + relative_line.end.y*psin }};
+    // rotate them to be around the player's view (90+player.angle) degrees
+    line transformed_line = {{ -relative_line.start.x*psin - relative_line.start.y*pcos, relative_line.start.x*pcos - relative_line.start.y*psin },
+                             { -relative_line.end.x*psin - relative_line.end.y*pcos,     relative_line.end.x*pcos - relative_line.end.y*psin }};
     float *tz1 = &transformed_line.start.y, *tz2 = &transformed_line.end.y;
 
     /*  PERSPECTIVE VIEW / PROJECTION */
@@ -241,17 +240,15 @@ void draw_debug_wall(program_state* state, wall_line wl)
 
     float pcos = cosf(p.angle), psin = sinf(p.angle);
 
-    line player_line = { p.pos, { p.pos.x + 5*pcos, p.pos.y - 5*psin} };
+    line player_line = { p.pos, { p.pos.x + PLAYER_LINE_LENGTH*pcos, p.pos.y - PLAYER_LINE_LENGTH*psin} };
 
     // transform line to be relative to the player
-    line relative_line = {{ absolute_line.start.x - p.pos.x, p.pos.y - absolute_line.start.y },
-                          { absolute_line.end.x - p.pos.x,   p.pos.y - absolute_line.end.y }};
+    line relative_line = {{ absolute_line.start.x - p.pos.x, absolute_line.start.y - p.pos.y },
+                          { absolute_line.end.x - p.pos.x,   absolute_line.end.y - p.pos.y }};
 
-    // rotate line to be around the player's view (90-player.angle) degrees
-    // multiply X-coordinates by -1 because we want to view the inverse change of X in the transformed view
-    line transformed_line = {{ -(relative_line.start.x*psin - relative_line.start.y*pcos), relative_line.start.x*pcos + relative_line.start.y*psin },
-                             { -(relative_line.end.x*psin - relative_line.end.y*pcos),     relative_line.end.x*pcos + relative_line.end.y*psin }};
-
+    // rotate line to be around the player's view (90+player.angle) degrees
+    line transformed_line = {{ -relative_line.start.x*psin - relative_line.start.y*pcos, relative_line.start.x*pcos - relative_line.start.y*psin },
+                             { -relative_line.end.x*psin - relative_line.end.y*pcos,     relative_line.end.x*pcos - relative_line.end.y*psin }};
     /* ABSOLUTE VIEW */
     offset.x = ABSOLUTE_VIEW.x, offset.y = ABSOLUTE_VIEW.y;
     // draw wall lines in the absolute view

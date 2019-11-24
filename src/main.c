@@ -25,8 +25,8 @@ static inline void handle_input(program_state* state)
     if(key[SDL_SCANCODE_RIGHT]) p->angle -= ANGULAR_VELOCITY;
     float pcos = cosf(p->angle), psin = sinf(p->angle);
     if(key[SDL_SCANCODE_UP] || key[SDL_SCANCODE_W]) {
-        p->pos.x += pcos;
-        p->pos.y -= psin;
+        p->pos.x += WALK_SPEED*pcos;
+        p->pos.y -= WALK_SPEED*psin;
     }
     if(key[SDL_SCANCODE_DOWN] || key[SDL_SCANCODE_S]) {
         p->pos.x -= pcos;
